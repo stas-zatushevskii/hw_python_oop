@@ -1,20 +1,18 @@
 
-import datetime as dt
-from datetime import date 
 from typing import Optional
+import datetime as dt
 
 formate_date = "%d.%m.%Y"
 
 class Record:
     def __init__(self, amount: float, comment: str,
-     date: Optional[str] = None) -> None:
+                date: Optional[str] = None) -> None:
         self.amount = amount
         self.comment = comment
         if date is None:
             self.date = dt.datetime.now().date()
         else:
             self.date = dt.datetime.strptime(date, formate_date).date()
-
 
 
 
@@ -48,7 +46,6 @@ class Calculator:
             if week_start <= record.date <= today:
                 week_sum += record.amount
         return week_sum
-            
 
 
 class CashCalculator(Calculator):
@@ -88,23 +85,3 @@ class CaloriesCalculator(Calculator):
             return (f"Сегодня можно съесть что-нибудь ещё,"
             f"но с общей калорийностью не более {limit_result} кКал")
         return "Хватит есть!"
-        
-
-    
-
-
-# создадим калькулятор денег с дневным лимитом 1000
-cash_calculator = CashCalculator(1000)
-
-# дата в параметрах не указана,
-# так что по умолчанию к записи
-# должна автоматически добавиться сегодняшняя дата
-cash_calculator.add_record(Record(amount=145, comment='кофе'))
-# и к этой записи тоже дата должна добавиться автоматически
-cash_calculator.add_record(Record(amount=300, comment='Серёге за обед'))
-# а тут пользователь указал дату, сохраняем её
-cash_calculator.add_record(Record(amount=3000,
-                                  comment='бар в Танин др',
-                                  date='08.11.2019'))
-
-print(cash_calculator.get_today_cash_remained('rub'))
