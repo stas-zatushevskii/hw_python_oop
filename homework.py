@@ -46,7 +46,7 @@ class Calculator:
         for record in self.records:
             if week_start <= record.date <= today:
                 week_sum += record.amount
-            return week_sum
+        return week_sum
 
 
 class CashCalculator(Calculator):
