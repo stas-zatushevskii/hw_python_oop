@@ -4,9 +4,11 @@ import datetime as dt
 
 formate_date = "%d.%m.%Y"
 
+
 class Record:
+
     def __init__(self, amount: float, comment: str,
-                date: Optional[str] = None) -> None:
+                 date: Optional[str] = None) -> None:
         self.amount = amount
         self.comment = comment
         if date is None:
@@ -15,13 +17,13 @@ class Record:
             self.date = dt.datetime.strptime(date, formate_date).date()
 
 
-
 class Calculator:
     """Слаживатель для всего"""
+
     def __init__(self, limit: float):
         self.limit = limit
         self.records = []
-    
+
     def add_record(self, record: Record):
         self.records.append(record)
 
@@ -35,9 +37,8 @@ class Calculator:
         return sum_stats_today
 
     def get_remained(self):
-        remains = self.limit - self.get_today_stats()
-        return remains 
-        
+        return self.limit - self.get_today_stats()
+
     def get_week_stats(self):
         today = dt.date.today()
         week_start = today - dt.timedelta(days=7)
@@ -45,7 +46,7 @@ class Calculator:
         for record in self.records:
             if week_start <= record.date <= today:
                 week_sum += record.amount
-        return week_sum
+            return week_sum
 
 
 class CashCalculator(Calculator):
@@ -67,21 +68,19 @@ class CashCalculator(Calculator):
         limit_result: float = round(self.get_remained() / cur_rate, 2)
         if limit_result > 0:
             return f"На сегодня осталось {limit_result} {cur_name}"
-        if limit_result == 0: 
+        if limit_result == 0:
             return "Денег нет, держись"
-        return f"Денег нет, держись: твой долг - {abs(limit_result)} {cur_name}"
-
+        return (f"Денег нет, держись: "
+                f"твой долг - {abs(limit_result)} {cur_name}")
 
 
 class CaloriesCalculator(Calculator):
-
     def __init__(self, limit: float):
         super().__init__(limit)
 
     def get_calories_remained(self):
         limit_result: int = self.get_remained()
-
         if limit_result > 0:
-            return (f"Сегодня можно съесть что-нибудь ещё,"
-            f"но с общей калорийностью не более {limit_result} кКал")
+            return (f"Сегодня можно съесть что-нибудь ещё, но с общей "
+                    f"калорийностью не более {limit_result} кКал")
         return "Хватит есть!"
