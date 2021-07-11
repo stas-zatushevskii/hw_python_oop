@@ -2,7 +2,7 @@
 from typing import Optional
 import datetime as dt
 
-formate_date = "%d.%m.%Y"
+Formate_date = "%d.%m.%Y"
 
 
 class Record:
@@ -14,7 +14,7 @@ class Record:
         if date is None:
             self.date = dt.datetime.now().date()
         else:
-            self.date = dt.datetime.strptime(date, formate_date).date()
+            self.date = dt.datetime.strptime(date, Formate_date).date()
 
 
 class Calculator:
@@ -28,12 +28,10 @@ class Calculator:
         self.records.append(record)
 
     def get_today_stats(self):
-        stats_today = []
         today = dt.datetime.today().date()
-        for record in self.records:
-            if record.date == today:
-                stats_today.append(record.amount)
-                sum_stats_today = sum(stats_today)
+        stats_today = [record.amount for record in self.records
+                       if record.date == today]
+        sum_stats_today = sum(stats_today)
         return sum_stats_today
 
     def get_remained(self):
@@ -42,11 +40,9 @@ class Calculator:
     def get_week_stats(self):
         today = dt.date.today()
         week_start = today - dt.timedelta(days=7)
-        week_sum = 0
-        for record in self.records:
-            if week_start <= record.date <= today:
-                week_sum += record.amount
-        return week_sum
+        week_sum = [record.amount for record in self.records
+                    if week_start <= record.date <= today]
+        return sum(week_sum)
 
 
 class CashCalculator(Calculator):
@@ -54,9 +50,6 @@ class CashCalculator(Calculator):
     EURO_RATE = 87.0
     USD_RATE = 73.0
     RUB_RATE = 1
-
-    def __init__(self, limit: float):
-        super().__init__(limit)
 
     def get_today_cash_remained(self, currency: str) -> float:
         currencies = {
@@ -75,8 +68,6 @@ class CashCalculator(Calculator):
 
 
 class CaloriesCalculator(Calculator):
-    def __init__(self, limit: float):
-        super().__init__(limit)
 
     def get_calories_remained(self):
         limit_result: int = self.get_remained()
