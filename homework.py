@@ -2,7 +2,7 @@
 from typing import Optional
 import datetime as dt
 
-Formate_date = "%d.%m.%Y"
+FORMATE_DATE = "%d.%m.%Y"
 
 
 class Record:
@@ -14,7 +14,7 @@ class Record:
         if date is None:
             self.date = dt.datetime.now().date()
         else:
-            self.date = dt.datetime.strptime(date, Formate_date).date()
+            self.date = dt.datetime.strptime(date, FORMATE_DATE).date()
 
 
 class Calculator:
@@ -59,12 +59,13 @@ class CashCalculator(Calculator):
         }
         cur_name, cur_rate = currencies[currency]
         limit_result: float = round(self.get_remained() / cur_rate, 2)
+        credit_result = abs(limit_result)
         if limit_result > 0:
             return f"На сегодня осталось {limit_result} {cur_name}"
         if limit_result == 0:
             return "Денег нет, держись"
-        return (f"Денег нет, держись: "
-                f"твой долг - {abs(limit_result)} {cur_name}")
+        return ("Денег нет, держись: "
+                f"твой долг - {credit_result} {cur_name}")
 
 
 class CaloriesCalculator(Calculator):
